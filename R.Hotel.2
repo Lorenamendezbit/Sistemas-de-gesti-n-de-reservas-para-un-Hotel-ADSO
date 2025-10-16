@@ -1,0 +1,103 @@
+class Pago: #clase de pagos
+
+    def __init__(self, id_pago, monto, metodo):
+        self.metodos_validos = ["Transferencia", "Tarjeta de crédito", "Efectivo"] #guarda opciones de pago validas
+        self.id_pago = id_pago
+        self.monto = monto
+        self.metodo = metodo if metodo in self.metodos_validos else "Método inválido" # verifica si el metodo se encuentra en la ista de opciones de metodos validos
+        self.estado = "Pendiente"
+
+    def procesar(self): # valida el estado de la reserva
+        if self.metodo == "Método inválido":
+            self.estado = "Fallido"
+        elif self.monto > 0: # verifica si el monto concuerda con el de la reserva
+            self.estado = "Completado"
+        else:
+            self.estado = "Fallido"
+
+    def __str__(self):  # muestra la informacion de la pago
+        return f"Pago {self.id_pago}: ${self.monto}, Método: {self.metodo}, Estado: {self.estado}"
+
+
+class Hotel:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.pagos = []    #lista para guardar todos los pagos
+        self.contador_id = 101   # el ID comienza con este numero
+
+    def registrar_pago(self, monto, metodo):
+        nuevo_pago = Pago(self.contador_id, monto, metodo)
+        nuevo_pago.procesar()
+        self.pagos.append(nuevo_pago)   # guarda la informacion del pago en la lista pagos
+        self.contador_id += 1  # suma 1 al contador para el nuevo pago
+
+    def mostrar_pagos(self):
+        print(f"\nPagos del hotel {self.nombre}:")
+        if not self.pagos:  # verifica si no hay pagos
+            print("- No hay pagos registrados.")
+        for p in self.pagos:  # recorre e imprime todo lo que hay en la lista de pagos
+            print(f"- {p}")
+
+
+def main():
+    hotel = Hotel("siuuuuuuu")
+
+    while True:
+        print("\n=== Menú de Registro de Pagos ===")
+        print("1. Registrar un nuevo pago")
+        print("2. Mostrar todos los pagos")
+        print("3. Volver al principio (sin hacer nada)")
+        print("4. Salir")
+        opcion = input("Elige una opción (1, 2, 3, 4): ")
+
+        if opcion == "1":
+            try:
+                print("\n=== Registro de Pago ===")
+                monto = float(input("Ingrese monto del pago: "))
+
+                if monto <= 0:
+                    print("El monto debe ser mayor a cero.\n")
+                    continue
+
+
+                while True:
+                    print("Métodos válidos:")
+                    print("1. Transferencia")
+                    print("2. Tarjeta de crédito")
+                    print("3. Efectivo")
+                    metodo_op = input("Ingrese una opción de método de pago (1-3): ")
+
+                    if metodo_op == "1":
+                        metodo = "Transferencia"
+                        break
+                    elif metodo_op == "2":
+                        metodo = "Tarjeta de crédito"
+                        break
+                    elif metodo_op == "3":
+                        metodo = "Efectivo"
+                        break
+                    else:
+                        print("Método inválido. Por favor, elija una opción válida (1, 2 o 3).\n")
+
+                hotel.registrar_pago(monto, metodo)
+                print("Pago registrado correctamente.\n")
+
+            except ValueError:
+                print("Error: Ingresó un valor no válido.\n")
+
+        elif opcion == "2":
+            hotel.mostrar_pagos()
+
+        elif opcion == "3":
+            print("Volviendo al inicio del menú...\n")
+            continue
+
+        elif opcion == "4":
+            print("Saliendo del programa. ¡Hasta luego!")
+            break
+
+        else:
+            print("Opción no válida. Intenta de nuevo.\n")
+
+
+main()
