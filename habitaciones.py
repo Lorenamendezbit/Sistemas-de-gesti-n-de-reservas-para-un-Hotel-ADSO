@@ -75,7 +75,8 @@ class GestorHabitaciones:
             else:
                 print(habitacion)
 
-# datos de prueba
+# Diccionario de habitaciones
 habitaciones = [Habitacion("101", "simple", 50000), Habitacion("102", "doble", 80000)]
+
 
 gestor_habitaciones=GestorHabitaciones()
